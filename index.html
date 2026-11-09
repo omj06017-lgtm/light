@@ -1,400 +1,332 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>조명 그룹 컨트롤</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cargo Container Air Light 컨트롤러</title>
 <style>
-:root{--bg:#f3f1ec;--panel:#fff;--ink:#16181c;--sub:#6a6e76;--line:#d9d6cf;--accent:#f2a900;--aink:#1a1400;--off:#2a2d33;--ok:#2f9e5f;--bad:#d64545;color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--bg:#14161a;--panel:#1d2025;--ink:#f1efe9;--sub:#9a9ea6;--line:#2c3037;--off:#2a2d33;--ok:#4cc380;--bad:#ff6b6b;color-scheme:dark}}
-*{box-sizing:border-box}
-:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;-webkit-tap-highlight-color:transparent}
-main{max-width:520px;margin:0 auto;padding:20px 16px 50px}
-h1{font-size:22px;margin:4px 0 2px;letter-spacing:-.02em}
-.sub{color:var(--sub);font-size:14px;margin:0 0 18px}
-h2{font-size:15px;margin:22px 2px 10px;color:var(--sub);font-weight:600}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
-.ptitle{font-size:15px;font-weight:700;margin-bottom:6px;display:flex;gap:8px;align-items:center}
-.ptitle .nm{flex:1}
-.big{font-size:48px;font-weight:700;letter-spacing:-.03em;line-height:1}
-.big small{font-size:20px;color:var(--sub);font-weight:500}
-button{font:inherit;border:0;border-radius:10px;padding:14px;min-height:48px;cursor:pointer;color:#f1efe9;background:var(--off)}
-button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-button:disabled{opacity:.4}
-.row{display:flex;gap:10px;margin-top:14px}
-.on{flex:1;background:var(--accent);color:var(--aink);font-weight:700;font-size:18px}
-.offb{flex:1;font-size:18px;font-weight:700}
-.add{width:100%;background:transparent;border:1.5px dashed var(--sub);color:var(--ink)}
-.add+.add{margin-top:10px}
-input[type=range]{width:100%;height:44px;accent-color:var(--accent);margin:8px 0 0}
-.scale{display:flex;justify-content:space-between;color:var(--sub);font-size:12px}
-.tl{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;font-size:15px}
-.tl span small{display:block;color:var(--sub);font-size:12px}
-.sw{width:56px;height:32px;border-radius:16px;position:relative;flex:none;padding:0;min-height:32px}
-.sw::after{content:"";position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .15s}
-.sw[aria-pressed=true]{background:var(--accent)}
-.sw[aria-pressed=true]::after{transform:translateX(24px)}
-.mini{min-height:38px;padding:6px 12px;font-size:13px}
-.pw{min-width:64px}
-.pw.on{background:var(--accent);color:var(--aink);font-weight:700;flex:none;font-size:13px}
-.light{padding:12px 0;border-top:1px solid var(--line)}
-.light:first-child{border-top:0;padding-top:0}
-.lt{display:flex;align-items:center;gap:8px}
-.lb{display:flex;align-items:center;gap:8px;margin-top:8px}
-.lb .bat{flex:1}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--ok);flex:none}
-.dot.bad{background:var(--bad)}
-.nm{flex:1;min-width:0;font:inherit;font-size:16px;font-weight:600;color:var(--ink);background:transparent;border:0;border-bottom:1px dashed var(--line);padding:6px 2px}
-.bat{font-size:13px;color:var(--sub)}
-.bat.low{color:var(--bad);font-weight:700}
-.mr{display:flex;align-items:center;gap:10px;margin-top:6px}
-.mr input[type=range]{flex:1;margin:0;height:40px;min-width:0}
-.pct{width:46px;text-align:right;font-variant-numeric:tabular-nums;color:var(--sub);font-size:14px}
-.mem{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
-.mn{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600}
-.mn .bat{margin-left:auto}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
-.chip.sel{background:var(--accent);color:var(--aink);font-weight:700}
-.hint{color:var(--sub);font-size:13px;margin:8px 2px 0}
-#msg{color:var(--sub);font-size:13px;min-height:20px;margin:6px 2px;word-break:break-all}
-.warn{background:#4a2b2b;color:#ffd9d9;border-radius:12px;padding:14px;font-size:14px;margin-bottom:14px}
-@media (prefers-reduced-motion:reduce){.sw::after{transition:none}}
+  :root{--bg:#12141a;--card:#1c2029;--line:#2c3240;--txt:#e8ecf3;--sub:#8b94a7;--acc:#4f8cff;--ok:#33c27f;--warn:#e0a030;--bad:#e05555}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;padding:16px;max-width:900px;margin:auto}
+  h1{font-size:20px;margin:4px 0 12px}
+  h2{font-size:16px;margin:24px 0 10px;color:var(--sub);font-weight:600}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  button{background:#2a3040;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
+  button:hover{background:#343b4f}
+  button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+  button.danger{color:var(--bad)}
+  button:disabled{opacity:.4;cursor:default}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+  .name{font-weight:600;word-break:break-all}
+  .badge{font-size:12px;padding:3px 8px;border-radius:99px;background:#2a3040;color:var(--sub);white-space:nowrap}
+  .badge.on{background:rgba(51,194,127,.15);color:var(--ok)}
+  .badge.busy,.badge.wait{background:rgba(224,160,48,.15);color:var(--warn)}
+  .badge.nodev{background:rgba(224,85,85,.15);color:var(--bad)}
+  .row{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+  .row label{font-size:13px;color:var(--sub);min-width:36px}
+  input[type=range]{flex:1;min-width:100px}
+  input[type=color]{width:44px;height:30px;border:none;background:none;padding:0}
+  input[type=text]{background:#12141a;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px;font-size:14px}
+  .members{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .chip{font-size:13px;background:#12141a;border:1px solid var(--line);border-radius:99px;padding:4px 10px;display:flex;gap:6px;align-items:center;cursor:pointer}
+  .banner{background:rgba(224,160,48,.12);border:1px solid var(--warn);color:var(--warn);padding:10px 12px;border-radius:8px;margin:8px 0;font-size:14px;display:none}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
 </style>
 </head>
 <body>
-<main>
-<h1>조명 그룹 컨트롤</h1>
-<p class="sub">연결한 조명을 한 번에, 그룹별로, 또는 하나씩 조절해요.</p>
-<div id="warn" class="warn" hidden>이 브라우저는 블루투스를 지원하지 않아요. iPhone에서는 Bluefy 앱으로 열어주세요.</div>
-<div id="msg" role="status"></div>
+<h1>💡 Air Light 컨트롤러</h1>
+<div id="banner" class="banner"></div>
 
-<div id="all"></div>
-
-<h2>그룹</h2>
-<div id="groups"></div>
-<button class="add" id="addG">그룹 만들기</button>
-
-<h2>조명</h2>
-<div class="panel">
-  <div id="lights"></div>
-  <button class="add" id="addL">조명 추가</button>
-  <button class="add" id="reAll">끊어진 조명 모두 연결</button>
-  <p class="hint">한 번 추가한 조명은 기억해 두었다가 앱을 다시 열면 자동으로 연결해요. 자동 연결이 안 되면 “다시 연결”을 눌러 주세요. 목록에 EASY-LIGHT가 안 보이면 조명을 껐다 켜고, 다른 앱(카고컨테이너 앱 등)이 연결돼 있지 않은지 확인하세요.</p>
+<!-- ========== 조명 (맨 위) ========== -->
+<div class="bar">
+  <button class="pri" data-act="add">＋ 새 조명 추가(최초 1회 페어링)</button>
+  <button data-act="connectAll">모두 연결</button>
+  <button data-act="disconnectAll">모두 해제</button>
+  <button data-act="allOn">모두 켜기</button>
+  <button data-act="allOff">모두 끄기</button>
 </div>
-<p class="sub" style="text-align:center;margin-top:28px">페이지 버전 9</p>
-</main>
+<h2>조명</h2>
+<div id="lights" class="grid"></div>
+
+<!-- ========== 그룹 (조명 아래) ========== -->
+<h2>그룹</h2>
+<div class="bar">
+  <input type="text" id="groupName" placeholder="새 그룹 이름">
+  <button data-act="addGroup">그룹 만들기</button>
+</div>
+<div id="groups" class="grid"></div>
 
 <script>
-(function(){
-var S='0000fc00-0000-1000-8000-00805f9b34fb', C='0000fff4-0000-1000-8000-00805f9b34fb', ST='0000fff7-0000-1000-8000-00805f9b34fb';
-var lights=[], groups=[], names={}, seq=0, editing={}, open={}, all={level:100,torch:false};
-function $(i){return document.getElementById(i)}
-function Q(s){return document.querySelectorAll(s)}
-function say(t){$('msg').textContent=t}
-var BT=!!navigator.bluetooth;
-if(!BT){$('warn').hidden=false;$('addL').disabled=true;$('reAll').disabled=true}
+/* =====================================================================
+   ★ 설정: 기존 v9 코드의 값으로 교체하세요 (아래는 임시 예시값)
+   ===================================================================== */
+const CONFIG = {
+  SERVICE_UUID: 0xFFE5,   // TODO: v9의 service UUID
+  CHAR_UUID:    0xFFE9,   // TODO: v9의 characteristic UUID
+  EXTRA_SERVICES: []      // 필요하면 추가 service UUID
+};
+const cmd = {               // TODO: v9의 실제 명령 바이트로 교체
+  power:      on => Uint8Array.from([0x7E,0x07,0x04,on?0xFF:0x00,0x00,on?0x01:0x00,0x02,0x01,0xEF]),
+  brightness: v  => Uint8Array.from([0x7E,0x04,0x01,v,0x01,0xFF,0x02,0x01,0xEF]), // v: 0~100
+  color:      (r,g,b) => Uint8Array.from([0x7E,0x07,0x05,0x03,r,g,b,0x10,0xEF])
+};
 
-function mk(id,dev,name,dn){
-  return {id:id,device:dev,dn:dn||'',char:null,st:null,ok:false,busy:false,tries:0,removed:false,hooked:null,
-          on:false,level:100,torch:false,bat:null,name:name,last:0};
+/* ===================== 저장/불러오기 ===================== */
+const load = (k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
+const save = ()=>{
+  localStorage.setItem('lights',JSON.stringify([...lights.values()].map(l=>({id:l.id,name:l.name,on:l.on,brightness:l.brightness,color:l.color}))));
+  localStorage.setItem('groups',JSON.stringify(groups));
+};
+const lights = new Map();
+let groups = load('groups',[]);
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function newLight(m){
+  return {id:m.id,name:m.name||'조명',on:m.on??false,brightness:m.brightness??100,color:m.color??'#ffffff',
+    device:null,char:null,connected:false,busy:false,watching:false,manual:false,abort:null,q:Promise.resolve(),attached:false};
 }
-function load(){
+function banner(msg){const b=$('#banner');b.textContent=msg;b.style.display='block'}
+
+/* ===================== 연결 로직 ===================== */
+function attach(l,device){
+  l.device=device;
+  if(l.attached) return;
+  l.attached=true;
+  device.addEventListener('gattserverdisconnected',()=>{
+    l.connected=false;l.char=null;render();
+    if(!l.manual) setTimeout(()=>tryConnect(l),1000);   // 자동 재연결 시도
+  });
+}
+
+const withTimeout=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms))]);
+
+async function doConnect(l){
+  const server = await l.device.gatt.connect();
+  const svc = await server.getPrimaryService(CONFIG.SERVICE_UUID);
+  l.char = await svc.getCharacteristic(CONFIG.CHAR_UUID);
+  l.connected=true;
+  stopWatch(l);
+  render();
+}
+
+async function tryConnect(l){
+  if(!l.device||l.connected||l.busy||l.manual) return;
+  l.busy=true;render();
   try{
-    names=JSON.parse(localStorage.getItem('lg_names')||'{}');
-    groups=JSON.parse(localStorage.getItem('lg_groups')||'[]');
-    var sv=JSON.parse(localStorage.getItem('lg_saved')||'[]');
-    lights=sv.map(function(s){return mk(s.id,null,s.name,s.dn)});
-  }catch(e){names={};groups=[];lights=[]}
-  seq=lights.length;
-}
-function save(){
-  try{
-    localStorage.setItem('lg_names',JSON.stringify(names));
-    localStorage.setItem('lg_groups',JSON.stringify(groups));
-    localStorage.setItem('lg_saved',JSON.stringify(lights.map(function(l){return {id:l.id,name:l.name,dn:l.dn}})));
-  }catch(e){}
-}
-function h(t,a,c){var e=document.createElement(t);for(var k in a){var v=a[k];if(k==='class')e.className=v;else if(k==='text')e.textContent=v;else if(k.slice(0,2)==='on')e[k]=v;else e.setAttribute(k,v)}(c||[]).forEach(function(x){if(x)e.appendChild(x)});return e}
-
-// 55 09 05 [손전등] [일반켜짐] [밝기] 1A 00 [검산] AA
-function frame(on,lvl,torch){
-  var b3=(on&&torch)?1:0, b4=(on&&!torch)?1:0, b5=on?lvl:0;
-  return new Uint8Array([0x55,0x09,0x05,b3,b4,b5,0x1A,0x00,(0x09+0x05+b3+b4+b5+0x1A)&0xFF,0xAA]);
-}
-function write(l,b){return l.char.writeValueWithoutResponse?l.char.writeValueWithoutResponse(b):l.char.writeValue(b)}
-function send(l){
-  if(!l.ok||!l.char)return;
-  clearTimeout(l.t);
-  var d=Date.now()-(l.last||0);
-  function go(){l.last=Date.now();write(l,frame(l.on,l.level,l.torch)).catch(function(){l.ok=false;render()})}
-  if(d>110)go();else l.t=setTimeout(go,120-d);
-}
-function find(id){return lights.filter(function(l){return l.id===id})[0]}
-function members(g){return g.members.map(find).filter(Boolean)}
-
-function statusText(l){
-  if(!l.ok)return l.busy?'연결 중…':'연결 안 됨';
-  return l.bat==null?'':'배터리 '+l.bat+'%';
-}
-function sync(l){
-  [].forEach.call(Q('[data-s="'+l.id+'"]'),function(e){e.value=l.level});
-  [].forEach.call(Q('[data-p="'+l.id+'"]'),function(e){e.textContent=l.level+'%'});
-  [].forEach.call(Q('[data-pw="'+l.id+'"]'),function(e){e.textContent=l.on?'켜짐':'꺼짐';e.className='pw mini'+(l.on?' on':'')});
-  [].forEach.call(Q('[data-tc="'+l.id+'"]'),function(e){e.setAttribute('aria-pressed',String(l.torch))});
-  [].forEach.call(Q('[data-b="'+l.id+'"]'),function(e){e.textContent=statusText(l);e.className='bat'+(l.ok&&l.bat!=null&&l.bat<=20?' low':'')});
-}
-function setOn(l,on){l.on=on;send(l);sync(l)}
-function setLevel(l,v){l.level=v;l.on=true;send(l);sync(l)}
-function setTorch(l,t){l.torch=t;if(l.on)send(l);sync(l)}
-
-function swBtn(pressed,label,fn,attr){var a={class:'sw',role:'switch','aria-pressed':String(!!pressed),'aria-label':label,onclick:fn};if(attr)a['data-tc']=attr;return h('button',a)}
-
-// 전체·그룹 공용 큰 조절 패널
-function bigCtl(st,getMs,torchLabel,onLabel,offLabel){
-  var num=h('div',{class:'big'});var tn=document.createTextNode(st.level);num.appendChild(tn);num.appendChild(h('small',{text:'%'}));
-  var sl=h('input',{type:'range',min:4,max:100,value:st.level,'aria-label':'밝기',oninput:function(){
-    st.level=parseInt(this.value,10);tn.textContent=st.level;getMs().forEach(function(l){setLevel(l,st.level)});save()}});
-  var tsw=swBtn(st.torch,torchLabel,function(){
-    st.torch=!st.torch;this.setAttribute('aria-pressed',String(st.torch));getMs().forEach(function(l){setTorch(l,st.torch)});save()});
-  return [num,sl,
-    h('div',{class:'scale'},[h('span',{text:'4%'}),h('span',{text:'100%'})]),
-    h('div',{class:'row'},[
-      h('button',{class:'on',text:onLabel,onclick:function(){getMs().forEach(function(l){setOn(l,true)})}}),
-      h('button',{class:'offb',text:offLabel,onclick:function(){getMs().forEach(function(l){setOn(l,false)})}})]),
-    h('div',{class:'tl'},[h('span',{text:torchLabel}),tsw])];
-}
-
-// 조명 하나의 작은 조절 줄
-function smallCtl(l){
-  return [
-    h('div',{class:'mr'},[
-      h('input',{type:'range',min:4,max:100,value:l.level,'data-s':l.id,'aria-label':l.name+' 밝기',oninput:function(){setLevel(l,parseInt(this.value,10))}}),
-      h('span',{class:'pct','data-p':l.id,text:l.level+'%'})]),
-    h('div',{class:'tl'},[h('span',{text:'손전등 모드'}),swBtn(l.torch,l.name+' 손전등',function(){setTorch(l,!l.torch)},l.id)])
-  ];
-}
-function pwBtn(l){return h('button',{class:'pw mini'+(l.on?' on':''),'data-pw':l.id,text:l.on?'켜짐':'꺼짐',onclick:function(){setOn(l,!l.on)}})}
-
-function forget(l){
-  l.removed=true;
-  clearTimeout(l.t);
-  try{l.device&&l.device.gatt.disconnect()}catch(e){}
-  try{l.device&&l.device.forget&&l.device.forget()}catch(e){}
-  lights=lights.filter(function(x){return x!==l});
-  delete names[l.id];
-  save();render();
-}
-
-function lightRow(l){
-  var ni=h('input',{class:'nm',value:l.name,'aria-label':'조명 이름',onchange:function(){
-    l.name=this.value.trim()||l.name;names[l.id]=l.name;save();render()}});
-  var row=h('div',{class:'light'},[
-    h('div',{class:'lt'},[h('div',{class:'dot'+(l.ok?'':' bad')}),ni,pwBtn(l)]),
-    h('div',{class:'lb'},[h('span',{'data-b':l.id}),
-      l.ok?null:h('button',{class:'mini',text:'다시 연결',onclick:function(){reconnect(l)}}),
-      h('button',{class:'mini',text:open[l.id]?'접기':'조절',onclick:function(){open[l.id]=!open[l.id];render()}}),
-      h('button',{class:'mini',text:'깜빡이기',onclick:function(){blink(l)}}),
-      h('button',{class:'mini',text:'삭제',onclick:function(){forget(l)}})])
-  ]);
-  if(open[l.id])smallCtl(l).forEach(function(x){row.appendChild(x)});
-  return row;
-}
-
-function groupPanel(g){
-  var ni=h('input',{class:'nm',value:g.name,'aria-label':'그룹 이름',onchange:function(){g.name=this.value.trim()||g.name;save();render()}});
-  var ms=members(g);
-  var p=h('div',{class:'panel'},[
-    h('div',{class:'ptitle'},[ni,
-      h('button',{class:'mini',text:editing[g.id]?'완료':'멤버 선택',onclick:function(){editing[g.id]=!editing[g.id];render()}}),
-      h('button',{class:'mini',text:'삭제',onclick:function(){groups=groups.filter(function(x){return x!==g});save();render()}})]),
-    h('div',{class:'bat',text:ms.length+'개 조명'+(ms.length<g.members.length?' (목록에 없는 조명 포함)':'')})
-  ]);
-  if(editing[g.id]){
-    p.appendChild(h('div',{class:'chips'},lights.map(function(l){
-      var sel=g.members.indexOf(l.id)>-1;
-      return h('button',{class:'chip mini'+(sel?' sel':''),text:l.name,'aria-pressed':String(sel),onclick:function(){
-        var i=g.members.indexOf(l.id);if(i>-1)g.members.splice(i,1);else g.members.push(l.id);save();render()}});
-    })));
-    if(!lights.length)p.appendChild(h('div',{class:'hint',text:'먼저 조명을 추가해 주세요.'}));
+    await withTimeout(doConnect(l),8000);
+  }catch(e){
+    console.warn('연결 실패 → 광고 대기',l.name,e.message);
+    watchFor(l);                      // 조명이 켜지면 자동 연결
+  }finally{
+    l.busy=false;render();
   }
-  if(ms.length){
-    var box=h('div',{style:'margin-top:12px'});
-    bigCtl(g,function(){return members(g)},'그룹 전체 손전등 모드','그룹 켜기','그룹 끄기').forEach(function(x){box.appendChild(x)});
-    p.appendChild(box);
-    ms.forEach(function(l){
-      var m=h('div',{class:'mem'},[h('div',{class:'mn'},[h('div',{class:'dot'+(l.ok?'':' bad')}),h('span',{text:l.name}),h('span',{'data-b':l.id}),pwBtn(l)])]);
-      smallCtl(l).forEach(function(x){m.appendChild(x)});p.appendChild(m);
+}
+
+async function watchFor(l){
+  if(l.watching||l.connected||!l.device||!l.device.watchAdvertisements) return;
+  l.watching=true;
+  const ac=new AbortController(); l.abort=ac;
+  const onAdv=()=>{
+    l.device.removeEventListener('advertisementreceived',onAdv);
+    stopWatch(l);
+    tryConnect(l);
+  };
+  l.device.addEventListener('advertisementreceived',onAdv);
+  try{
+    await l.device.watchAdvertisements({signal:ac.signal});
+  }catch(e){
+    l.device.removeEventListener('advertisementreceived',onAdv);
+    l.watching=false;
+  }
+  render();
+}
+function stopWatch(l){
+  if(l.abort){try{l.abort.abort()}catch{} l.abort=null}
+  l.watching=false;
+}
+
+function connectAll(){
+  lights.forEach(l=>{l.manual=false;tryConnect(l)});
+}
+function disconnectLight(l){
+  l.manual=true;stopWatch(l);
+  try{l.device?.gatt?.disconnect()}catch{}
+  l.connected=false;render();
+}
+
+/* ===================== 새 조명 추가 (최초 1회) ===================== */
+async function addLight(){
+  try{
+    const device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices:true,
+      optionalServices:[CONFIG.SERVICE_UUID,...CONFIG.EXTRA_SERVICES]
     });
-  }
-  return p;
+    let l=lights.get(device.id);
+    if(!l){l=newLight({id:device.id,name:device.name||'조명 '+(lights.size+1)});lights.set(device.id,l)}
+    attach(l,device);
+    l.manual=false;
+    save();render();
+    tryConnect(l);
+  }catch(e){ if(e.name!=='NotFoundError') alert('추가 실패: '+e.message) }
+}
+
+/* ===================== 명령 전송 ===================== */
+function write(l,data){
+  l.q=l.q.then(async()=>{
+    if(!l.connected||!l.char) return;
+    try{
+      if(l.char.properties.writeWithoutResponse) await l.char.writeValueWithoutResponse(data);
+      else await l.char.writeValue(data);
+    }catch(e){console.warn('write 실패',l.name,e.message)}
+  });
+}
+const hexToRgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+
+function setPower(l,on){l.on=on;write(l,cmd.power(on))}
+function setBrightness(l,v){l.brightness=v;write(l,cmd.brightness(v))}
+function setColor(l,hex){l.color=hex;write(l,cmd.color(...hexToRgb(hex)))}
+
+const timers={};
+function throttle(key,fn,ms=60){
+  clearTimeout(timers[key]);timers[key]=setTimeout(fn,ms);
+}
+
+/* ===================== 렌더링 ===================== */
+function statusOf(l){
+  if(!l.device) return ['nodev','권한 없음(재페어링 필요)'];
+  if(l.connected) return ['on','연결됨'];
+  if(l.busy) return ['busy','연결 중…'];
+  if(l.watching) return ['wait','조명 켜지길 대기 중…'];
+  return ['off','끊김'];
 }
 
 function render(){
-  var a=$('all');a.innerHTML='';
-  var ap=h('div',{class:'panel'},[h('div',{class:'ptitle',text:'전체 조명 ('+lights.length+'개)'})]);
-  if(lights.length)bigCtl(all,function(){return lights},'손전등 모드','전체 켜기','전체 끄기').forEach(function(x){ap.appendChild(x)});
-  else ap.appendChild(h('div',{class:'hint',text:'아래에서 조명을 먼저 추가해 주세요.'}));
-  a.appendChild(ap);
-  var gc=$('groups');gc.innerHTML='';groups.forEach(function(g){gc.appendChild(groupPanel(g))});
-  var lc=$('lights');lc.innerHTML='';lights.forEach(function(l){lc.appendChild(lightRow(l))});
-  if(lights.length)lc.style.marginBottom='14px';else lc.style.marginBottom='0';
-  lights.forEach(sync);
+  // 조명
+  const lh=[...lights.values()].map(l=>{
+    const [cls,txt]=statusOf(l);
+    return `<div class="card" data-light="${l.id}">
+      <div class="head"><span class="name">${esc(l.name)}</span><span class="badge ${cls}">${txt}</span></div>
+      <div class="bar" style="margin:0">
+        ${l.connected
+          ? `<button data-act="disc" data-id="${l.id}">해제</button>`
+          : `<button class="pri" data-act="conn" data-id="${l.id}" ${l.device?'':'disabled'}>연결</button>`}
+        <button data-act="toggle" data-id="${l.id}" ${l.connected?'':'disabled'}>${l.on?'끄기':'켜기'}</button>
+        <button data-act="rename" data-id="${l.id}">이름</button>
+        <button class="danger" data-act="del" data-id="${l.id}">삭제</button>
+      </div>
+      <div class="row"><label>밝기</label><input type="range" class="bri" min="1" max="100" value="${l.brightness}" data-in="bri" data-id="${l.id}"></div>
+      <div class="row"><label>색상</label><input type="color" class="col" value="${l.color}" data-in="col" data-id="${l.id}"></div>
+    </div>`;
+  }).join('');
+  $('#lights').innerHTML = lh || '<div class="empty">등록된 조명이 없습니다. “새 조명 추가”로 한 번만 페어링하세요.</div>';
+
+  // 그룹
+  const gh=groups.map(g=>`
+    <div class="card" data-group="${g.id}">
+      <div class="head"><span class="name">${esc(g.name)}</span>
+        <span><button data-act="renameG" data-id="${g.id}">이름</button>
+        <button class="danger" data-act="delG" data-id="${g.id}">삭제</button></span></div>
+      <div class="bar" style="margin:0">
+        <button data-act="gOn" data-id="${g.id}">켜기</button>
+        <button data-act="gOff" data-id="${g.id}">끄기</button>
+        <button data-act="gConn" data-id="${g.id}">연결</button>
+      </div>
+      <div class="row"><label>밝기</label><input type="range" min="1" max="100" value="100" data-in="gbri" data-id="${g.id}"></div>
+      <div class="row"><label>색상</label><input type="color" value="#ffffff" data-in="gcol" data-id="${g.id}"></div>
+      <div class="members">${[...lights.values()].map(l=>`
+        <label class="chip"><input type="checkbox" data-in="member" data-id="${g.id}" data-light="${l.id}" ${g.members.includes(l.id)?'checked':''}>${esc(l.name)}</label>`).join('')||'<span class="empty">조명 없음</span>'}</div>
+    </div>`).join('');
+  $('#groups').innerHTML = gh || '<div class="empty">그룹이 없습니다.</div>';
 }
 
-// 조명이 알려주는 상태(켜짐·밝기·배터리)
-function parse(l,v){
-  if(!v||v.byteLength<10)return;
-  var a=new Uint8Array(v.buffer,v.byteOffset,v.byteLength);
-  if(a[0]!==0x55||a[9]!==0xAA)return;
-  l.bat=a[6];
-  if(Date.now()-(l.last||0)>700){var t=a[3]===1,on=t||a[4]===1;l.on=on;if(on){l.torch=t;if(a[5]>=4)l.level=a[5]}}
-  sync(l);
-}
-function attach(l){
-  if(!l.st)return;
-  if(l.h){try{l.st.removeEventListener('characteristicvaluechanged',l.h)}catch(e){}}
-  l.h=function(e){parse(l,e.target.value)};
-  l.st.readValue().then(function(v){parse(l,v)}).catch(function(){});
-  l.st.addEventListener('characteristicvaluechanged',l.h);
-  l.st.startNotifications().catch(function(){});
-}
-function link(dev){
-  return dev.gatt.connect().then(function(s){return s.getPrimaryServices()}).then(function(sv){
-    var i=0;
-    function n(){
-      if(i>=sv.length)throw new Error('FFF4를 찾지 못했어요');
-      var s=sv[i++];
-      return s.getCharacteristic(C).then(function(ch){
-        return s.getCharacteristic(ST).then(function(st){return {ch:ch,st:st}}).catch(function(){return {ch:ch,st:null}});
-      }).catch(n);
-    }
-    return n();
-  });
-}
+/* ===================== 이벤트 ===================== */
+const groupLights=g=>g.members.map(id=>lights.get(id)).filter(Boolean);
 
-// 연결이 끊기면 몇 번 자동으로 다시 시도
-function hook(l){
-  if(!l.device||l.hooked===l.device)return;
-  l.hooked=l.device;
-  l.device.addEventListener('gattserverdisconnected',function(){
-    l.ok=false;render();
-    if(!l.removed&&l.tries<3){l.tries++;setTimeout(function(){connectLight(l,true)},1500)}
-  });
-}
-// 저장된 기기 객체로 연결. 성공하면 true
-function connectLight(l,quiet){
-  if(l.busy||l.ok||!l.device||l.removed)return Promise.resolve(l.ok);
-  hook(l);
-  l.busy=true;sync(l);
-  return link(l.device).then(function(r){
-    l.char=r.ch;l.st=r.st;l.ok=true;l.busy=false;l.tries=0;
-    render();attach(l);return true;
-  }).catch(function(e){
-    l.busy=false;l.ok=false;render();
-    if(!quiet)say(l.name+' 연결 실패: '+(e&&e.message?e.message:String(e)));
-    return false;
-  });
-}
-// 끊어진 조명을 하나씩 순서대로 연결
-function connectAll(quiet){
-  var list=lights.filter(function(l){return !l.ok&&l.device&&!l.busy});
-  return list.reduce(function(p,l){return p.then(function(){return connectLight(l,quiet)})},Promise.resolve());
-}
-function reconnect(l){
-  l.tries=0;
-  if(l.device){
-    say(l.name+' 다시 연결하는 중이에요…');
-    connectLight(l).then(function(ok){if(ok)say(l.name+'을(를) 다시 연결했어요.')});
-  }else{
-    say('이 조명은 기기 정보가 없어요. 목록에서 같은 조명을 한 번 선택해 주세요.');
-    addLight();
-  }
-}
-// 앱을 열 때: 허용된 기기 목록에서 저장된 조명을 찾아 자동 연결
-function restore(){
-  if(!BT||!lights.length)return;
-  if(!navigator.bluetooth.getDevices){
-    say('이 브라우저는 자동 재연결을 지원하지 않아요. 각 조명의 “다시 연결”을 눌러 한 번 선택해 주세요.');
-    return;
-  }
-  say('저장된 조명을 찾는 중이에요…');
-  navigator.bluetooth.getDevices().then(function(devs){
-    var matched=0;
-    devs.forEach(function(d){var l=find(d.id);if(l){l.device=d;if(d.name)l.dn=d.name;hook(l);matched++}});
-    if(!matched){say('자동으로 찾지 못했어요. “다시 연결”을 눌러 조명을 선택해 주세요.');return}
-    say(matched+'개 조명에 연결하는 중이에요…');
-    return connectAll(true).then(function(){
-      var bad=lights.filter(function(l){return !l.ok}).length;
-      say(bad?bad+'개 조명이 연결되지 않았어요. 조명이 켜져 있는지 확인하고 “다시 연결”을 눌러 주세요.':'저장된 조명을 모두 연결했어요.');
-    });
-  }).catch(function(e){say('자동 연결 실패: '+(e&&e.message?e.message:String(e)))});
-}
-
-function blink(l){
-  var q=[1,0,1,0,1],i=0;
-  (function step(){
-    if(i>=q.length){send(l);return}
-    var b=frame(!!q[i],100,false);i++;
-    if(l.ok&&l.char)write(l,b).catch(function(){});
-    setTimeout(step,350);
-  })();
-}
-
-function addLight(){
-  say('블루투스 기기 목록에서 EASY-LIGHT를 선택하세요.');
-  navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:[S]})
-  .then(function(dev){
-    var l=find(dev.id);
-    if(l&&l.ok){say('이미 연결된 조명이에요.');return}
-    if(l){l.device=dev;if(dev.name)l.dn=dev.name}
-    else{
-      l=mk(dev.id,dev,names[dev.id]||'조명 '+(++seq),dev.name);
-      names[dev.id]=l.name;lights.push(l);
-    }
-    l.tries=0;
-    save();render();
-    say((dev.name||'선택한 기기')+'에 연결하는 중이에요…');
-    return connectLight(l).then(function(ok){
-      if(ok)say(l.name+'을(를) 연결했어요. 기억해 두었다가 다음에 자동으로 연결할게요. “깜빡이기”로 어떤 조명인지 확인하고 이름을 바꿔 보세요.');
-    });
-  })
-  .catch(function(e){
-    if(e&&e.name==='NotFoundError')say('선택을 취소했어요.');
-    else say('실패: '+(e&&e.name?e.name:typeof e)+': '+(e&&e.message?e.message:String(e)));
-  });
-}
-
-$('addL').onclick=addLight;
-$('reAll').onclick=function(){
-  lights.forEach(function(l){l.tries=0});
-  if(!lights.some(function(l){return !l.ok}))return say('모두 연결돼 있어요.');
-  if(lights.some(function(l){return !l.ok&&!l.device}) && BT && navigator.bluetooth.getDevices){
-    navigator.bluetooth.getDevices().then(function(devs){
-      devs.forEach(function(d){var l=find(d.id);if(l&&!l.device){l.device=d;hook(l)}});
-      say('연결하는 중이에요…');return connectAll(false);
-    }).then(function(){say('연결 시도를 마쳤어요.')}).catch(function(){});
-  }else{
-    say('연결하는 중이에요…');
-    connectAll(false).then(function(){say('연결 시도를 마쳤어요.')});
-  }
-};
-$('addG').onclick=function(){
-  var g={id:'g'+Date.now(),name:'그룹 '+(groups.length+1),members:[],level:100,torch:false};
-  groups.push(g);editing[g.id]=true;save();render();say('“멤버 선택”에서 이 그룹에 넣을 조명을 골라 주세요.');
-};
-// 페이지를 떠날 때 조명 연결을 풀어 다른 곳에서 다시 잡히게 함
-window.addEventListener('pagehide',function(){lights.forEach(function(l){l.removed=true;try{l.device&&l.device.gatt.disconnect()}catch(e){}})});
-// 앱으로 돌아오면 끊어진 조명을 다시 연결
-window.addEventListener('pageshow',function(e){if(e.persisted){lights.forEach(function(l){l.removed=false;l.tries=0});restore()}});
-document.addEventListener('visibilitychange',function(){
-  if(document.visibilityState==='visible'&&lights.some(function(l){return !l.ok&&l.device&&!l.busy})){
-    lights.forEach(function(l){l.tries=0});connectAll(true);
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]'); if(!b) return;
+  const act=b.dataset.act, id=b.dataset.id;
+  const l=lights.get(id), g=groups.find(x=>x.id===id);
+  switch(act){
+    case 'add': addLight();break;
+    case 'connectAll': connectAll();break;
+    case 'disconnectAll': lights.forEach(disconnectLight);break;
+    case 'allOn': lights.forEach(x=>x.connected&&setPower(x,true));save();render();break;
+    case 'allOff': lights.forEach(x=>x.connected&&setPower(x,false));save();render();break;
+    case 'conn': l.manual=false;tryConnect(l);break;
+    case 'disc': disconnectLight(l);break;
+    case 'toggle': setPower(l,!l.on);save();render();break;
+    case 'rename': {const n=prompt('조명 이름',l.name);if(n){l.name=n;save();render()}break}
+    case 'del':
+      if(confirm(`"${l.name}" 삭제할까요?`)){
+        disconnectLight(l);
+        try{l.device?.forget?.()}catch{}
+        lights.delete(id);groups.forEach(x=>x.members=x.members.filter(m=>m!==id));
+        save();render();
+      }break;
+    case 'addGroup': {
+      const inp=$('#groupName');const n=inp.value.trim();if(!n)return;
+      groups.push({id:'g'+Date.now(),name:n,members:[]});inp.value='';save();render();break}
+    case 'renameG': {const n=prompt('그룹 이름',g.name);if(n){g.name=n;save();render()}break}
+    case 'delG': if(confirm(`"${g.name}" 그룹 삭제?`)){groups=groups.filter(x=>x.id!==id);save();render()}break;
+    case 'gOn': groupLights(g).forEach(x=>x.connected&&setPower(x,true));save();render();break;
+    case 'gOff': groupLights(g).forEach(x=>x.connected&&setPower(x,false));save();render();break;
+    case 'gConn': groupLights(g).forEach(x=>{x.manual=false;tryConnect(x)});break;
   }
 });
-load();render();restore();
-})();
+
+document.addEventListener('input',e=>{
+  const t=e.target, k=t.dataset.in; if(!k) return;
+  const id=t.dataset.id;
+  if(k==='bri'){const l=lights.get(id);l.brightness=+t.value;throttle('b'+id,()=>{setBrightness(l,l.brightness);save()})}
+  if(k==='col'){const l=lights.get(id);l.color=t.value;throttle('c'+id,()=>{setColor(l,l.color);save()})}
+  if(k==='gbri'){const g=groups.find(x=>x.id===id);
+    groupLights(g).forEach(l=>{l.brightness=+t.value;
+      const s=document.querySelector(`[data-light="${l.id}"] .bri`);if(s)s.value=t.value;
+      throttle('b'+l.id,()=>setBrightness(l,l.brightness))});save()}
+  if(k==='gcol'){const g=groups.find(x=>x.id===id);
+    groupLights(g).forEach(l=>{l.color=t.value;
+      const s=document.querySelector(`[data-light="${l.id}"] .col`);if(s)s.value=t.value;
+      throttle('c'+l.id,()=>setColor(l,l.color))});save()}
+});
+
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.dataset.in==='member'){
+    const g=groups.find(x=>x.id===t.dataset.id), lid=t.dataset.light;
+    g.members = t.checked ? [...new Set([...g.members,lid])] : g.members.filter(m=>m!==lid);
+    save();
+  }
+});
+
+/* ===================== 시작 ===================== */
+async function init(){
+  if(!navigator.bluetooth){
+    banner('이 브라우저는 Web Bluetooth를 지원하지 않습니다. PC/안드로이드의 Chrome 또는 Edge를 사용하세요. (iOS는 Bluefy 앱)');
+    return;
+  }
+  load('lights',[]).forEach(m=>lights.set(m.id,newLight(m)));
+
+  if(navigator.bluetooth.getDevices){
+    try{
+      const devs=await navigator.bluetooth.getDevices();
+      devs.forEach(d=>{
+        let l=lights.get(d.id);
+        if(!l){l=newLight({id:d.id,name:d.name||'조명'});lights.set(d.id,l)}
+        attach(l,d);
+      });
+      save();render();
+      connectAll();                       // 선택 창 없이 자동 연결
+    }catch(e){console.warn(e);render()}
+  }else{
+    banner('이 브라우저는 자동 재연결(getDevices)을 지원하지 않습니다. chrome://flags/#enable-web-bluetooth-new-permissions-backend 를 Enabled로 바꾸고 Chrome을 재시작하세요.');
+    render();
+  }
+}
+render();
+init();
 </script>
 </body>
 </html>
