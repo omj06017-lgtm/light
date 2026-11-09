@@ -140,15 +140,25 @@ input[type=range]{width:100%;height:44px;accent-color:var(--accent);margin:8px 0
 
   function addLight(){
     say('조명 목록을 불러오는 중이에요…');
+    var stage = '선택';
     navigator.bluetooth.requestDevice({
       filters:[{namePrefix:'EASY-LIGHT'}],
-      optionalServices:[SERVICE]
+      optionalServices:[SERVICE, 0xFFF0, 0xFFE0, 0xFF00, '02f00000-0000-0000-0000-00000000fe00']
     }).then(function(dev){
       if(lights.some(function(l){return l.device.id === dev.id})){ say('이미 추가한 조명이에요.'); return; }
       say('연결하는 중이에요…');
+      stage = '연결';
       return dev.gatt.connect()
-        .then(function(s){return s.getPrimaryService(SERVICE)})
-        .then(function(svc){return svc.getCharacteristic(CHAR)})
+        .then(function(s){ stage = '서비스 찾기'; return s.getPrimaryServices(); })
+        .then(function(svcs){
+          stage = '명령 칸(FFF4) 찾기 (서비스 ' + svcs.length + '개 발견)';
+          var i = 0;
+          function tryNext(){
+            if(i >= svcs.length) throw new Error('FFF4를 찾지 못했어요');
+            return svcs[i++].getCharacteristic(CHAR).catch(function(){ return tryNext(); });
+          }
+          return tryNext();
+        })
         .then(function(ch){
           var l = {device:dev, char:ch, ok:true};
           dev.addEventListener('gattserverdisconnected', function(){ l.ok = false; render(); });
@@ -156,8 +166,8 @@ input[type=range]{width:100%;height:44px;accent-color:var(--accent);margin:8px 0
           say('조명 ' + lights.length + '번을 추가했어요. “깜빡이기”로 어떤 조명인지 확인해 보세요.');
         });
     }).catch(function(e){
-      if(e && e.name === 'NotFoundError'){ say('선택을 취소했어요.'); }
-      else { say('연결에 실패했어요. 기존 카고컨테이너 앱을 완전히 종료하고 다시 시도해 주세요.'); }
+      if(stage === '선택' && e && e.name === 'NotFoundError'){ say('선택을 취소했어요.'); }
+      else { say('실패 [' + stage + '] ' + (e && e.name ? e.name : '') + ': ' + (e && e.message ? e.message : e)); }
     });
   }
 
