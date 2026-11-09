@@ -3,199 +3,233 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>조명 그룹 컨트롤</title>
-<meta name="theme-color" content="#14161a">
+<title>조명 컨트롤</title>
 <style>
-:root{--bg:#f3f1ec;--panel:#ffffff;--ink:#16181c;--sub:#6a6e76;--line:#d9d6cf;--accent:#f2a900;--accent-ink:#1a1400;--off:#2a2d33;--ok:#2f9e5f;--bad:#d64545;color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161a;--panel:#1d2025;--ink:#f1efe9;--sub:#9a9ea6;--line:#2c3037;--accent:#f2a900;--accent-ink:#1a1400;--off:#2a2d33;--ok:#4cc380;--bad:#ff6b6b;color-scheme:dark}}
+:root{--bg:#f3f1ec;--panel:#fff;--ink:#16181c;--sub:#6a6e76;--line:#d9d6cf;--accent:#f2a900;--aink:#1a1400;--off:#2a2d33;--ok:#2f9e5f;--bad:#d64545;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#14161a;--panel:#1d2025;--ink:#f1efe9;--sub:#9a9ea6;--line:#2c3037;--off:#2a2d33;--ok:#4cc380;--bad:#ff6b6b;color-scheme:dark}}
 *{box-sizing:border-box}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;-webkit-tap-highlight-color:transparent}
-main{max-width:520px;margin:0 auto;padding:20px 16px 40px}
-h1{font-size:22px;margin:4px 0 2px;letter-spacing:-.02em}
-.sub{color:var(--sub);font-size:14px;margin:0 0 18px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
-.big{font-size:48px;font-weight:700;letter-spacing:-.03em;line-height:1}
-.big small{font-size:20px;color:var(--sub);font-weight:500}
-.row{display:flex;gap:10px}
-button{font:inherit;border:0;border-radius:10px;padding:14px;cursor:pointer;color:var(--ink);background:var(--off);min-height:48px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:560px;margin:0 auto;padding:18px 14px 60px}
+h1{font-size:22px;margin:4px 0 14px;letter-spacing:-.02em}
+h2{font-size:17px;margin:22px 0 10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+button{font:inherit;border:0;border-radius:10px;padding:10px 14px;min-height:44px;cursor:pointer;color:#f1efe9;background:var(--off)}
 button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-button:disabled{opacity:.4}
-.on{background:var(--accent);color:var(--accent-ink);font-weight:700;flex:1;font-size:18px}
-.offb{flex:1;font-size:18px;font-weight:700;color:#f1efe9}
 .add{width:100%;background:transparent;border:1.5px dashed var(--sub);color:var(--ink)}
-input[type=range]{width:100%;height:44px;accent-color:var(--accent);margin:8px 0 0}
-.scale{display:flex;justify-content:space-between;color:var(--sub);font-size:12px}
-.light{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
-.light:first-child{border-top:0}
+.mini{min-height:38px;padding:6px 11px;font-size:13px}
+.pw.on,.chip.sel{background:var(--accent);color:var(--aink);font-weight:700}
+.top{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.nm{flex:1;min-width:0;font:inherit;font-size:17px;font-weight:700;color:var(--ink);background:transparent;border:0;border-bottom:1px dashed var(--line);padding:6px 2px}
 .dot{width:10px;height:10px;border-radius:50%;background:var(--ok);flex:none}
 .dot.bad{background:var(--bad)}
-.name{flex:1;font-size:15px}
-.name span{display:block;color:var(--sub);font-size:12px}
-.mini{padding:8px 12px;min-height:40px;font-size:13px}
-.mode{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.msg{color:var(--sub);font-size:13px;min-height:20px;margin:6px 2px}
-.warn{background:#4a2b2b;color:#ffd9d9;border-radius:12px;padding:14px;font-size:14px;margin-bottom:14px}
-.sw{width:56px;height:32px;border-radius:16px;background:var(--off);position:relative;flex:none;padding:0;min-height:32px}
-.sw::after{content:"";position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .15s}
+.ctl{display:flex;flex-direction:column;gap:6px}
+.r{display:flex;align-items:center;gap:10px}
+input[type=range]{flex:1;height:40px;accent-color:var(--accent);min-width:0}
+.pct{width:46px;text-align:right;font-variant-numeric:tabular-nums;color:var(--sub);font-size:14px}
+.tl{display:flex;align-items:center;gap:8px;color:var(--sub);font-size:13px}
+.sw{width:50px;height:30px;border-radius:15px;padding:0;min-height:30px;position:relative;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .15s}
 .sw[aria-pressed=true]{background:var(--accent)}
-.sw[aria-pressed=true]::after{transform:translateX(24px)}
+.sw[aria-pressed=true]::after{transform:translateX(20px)}
+.mem{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}
+.mn{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.sub{color:var(--sub);font-size:13px}
+#msg{color:var(--sub);font-size:13px;min-height:20px;margin:8px 2px;word-break:break-all}
+.warn{background:#4a2b2b;color:#ffd9d9;border-radius:12px;padding:14px;font-size:14px;margin-bottom:14px}
 @media (prefers-reduced-motion:reduce){.sw::after{transition:none}}
 </style>
 </head>
 <body>
 <main>
-  <h1>조명 그룹 컨트롤</h1>
-  <p class="sub">연결한 조명을 한 번에 켜고 끄고 밝기를 조절해요.</p>
+<h1>조명 컨트롤</h1>
+<div id="warn" class="warn" hidden>이 브라우저는 블루투스를 지원하지 않아요. iPhone에서는 Bluefy 앱으로 열어주세요.</div>
+<div id="msg" role="status"></div>
 
-  <div id="warn" class="warn" hidden>이 브라우저는 블루투스를 지원하지 않아요. iPhone에서는 Bluefy 앱으로 이 페이지를 열어주세요.</div>
+<h2>그룹</h2>
+<div id="groups"></div>
+<button class="add" id="addG">그룹 만들기</button>
 
-  <section class="panel" aria-label="그룹 제어">
-    <div class="big" id="pct">100<small>%</small></div>
-    <input id="slider" type="range" min="4" max="100" value="100" aria-label="그룹 밝기">
-    <div class="scale"><span>4%</span><span>100%</span></div>
-    <div class="row" style="margin-top:14px">
-      <button class="on" id="allOn">전체 켜기</button>
-      <button class="offb" id="allOff">전체 끄기</button>
-    </div>
-  </section>
-
-  <section class="panel mode">
-    <div class="name">손전등 모드<span>켜져 있으면 밝기 조절 시 손전등 형식으로 보내요</span></div>
-    <button class="sw" id="torch" role="switch" aria-pressed="false" aria-label="손전등 모드"></button>
-  </section>
-
-  <section class="panel" aria-label="연결된 조명">
-    <div id="list"></div>
-    <div id="empty" class="sub" style="margin:0 0 12px">연결된 조명이 없어요. 아래 버튼으로 하나씩 추가하세요.</div>
-    <button class="add" id="add">조명 추가</button>
-  </section>
-  <div class="msg" id="msg" role="status"></div>
+<h2>조명</h2>
+<div id="lights"></div>
+<button class="add" id="addL">조명 추가</button>
 </main>
 
 <script>
 (function(){
-  var SERVICE = '0000fc00-0000-1000-8000-00805f9b34fb', CHAR = '0000fff4-0000-1000-8000-00805f9b34fb';
-  var lights = []; // {device, char, label, ok}
-  var $ = function(id){return document.getElementById(id)};
-  var msgEl = $('msg'), listEl = $('list'), emptyEl = $('empty');
-  var level = 100, torch = false;
+var S='0000fc00-0000-1000-8000-00805f9b34fb', C='0000fff4-0000-1000-8000-00805f9b34fb';
+var lights=[], groups=[], names={}, seq=0, editing={};
+function $(i){return document.getElementById(i)}
+function say(t){$('msg').textContent=t}
+if(!navigator.bluetooth){$('warn').hidden=false;$('addL').disabled=true}
 
-  if(!navigator.bluetooth){ $('warn').hidden = false; $('add').disabled = true; }
+function load(){try{names=JSON.parse(localStorage.getItem('lg_names')||'{}');groups=JSON.parse(localStorage.getItem('lg_groups')||'[]')}catch(e){names={};groups=[]}}
+function save(){try{localStorage.setItem('lg_names',JSON.stringify(names));localStorage.setItem('lg_groups',JSON.stringify(groups))}catch(e){}}
 
-  function say(t){ msgEl.textContent = t; }
+function h(t,a,c){var e=document.createElement(t);for(var k in a){var v=a[k];if(k==='class')e.className=v;else if(k==='text')e.textContent=v;else if(k.slice(0,2)==='on')e[k]=v;else e.setAttribute(k,v)}(c||[]).forEach(function(x){if(x)e.appendChild(x)});return e}
 
-  // 55 09 05 [mode] [on] [level] 1A 00 [sum] AA
-  function frame(on, lvl, isTorch){
-    var b3 = (isTorch && on) ? 1 : 0;
-    var b4 = (!isTorch && on) ? 1 : 0;
-    var b5 = on ? lvl : 0;
-    var sum = (0x09 + 0x05 + b3 + b4 + b5 + 0x1A + 0x00) & 0xFF;
-    return new Uint8Array([0x55,0x09,0x05,b3,b4,b5,0x1A,0x00,sum,0xAA]);
+// 55 09 05 [손전등] [일반켜짐] [밝기] 1A 00 [검산] AA
+function frame(on,lvl,torch){
+  var b3=(on&&torch)?1:0, b4=(on&&!torch)?1:0, b5=on?lvl:0;
+  var sum=(0x09+0x05+b3+b4+b5+0x1A)&0xFF;
+  return new Uint8Array([0x55,0x09,0x05,b3,b4,b5,0x1A,0x00,sum,0xAA]);
+}
+function send(l){
+  if(!l.ok)return;
+  clearTimeout(l.t);
+  var d=Date.now()-(l.last||0);
+  function go(){
+    l.last=Date.now();
+    var b=frame(l.on,l.level,l.torch);
+    var p=l.char.writeValueWithoutResponse?l.char.writeValueWithoutResponse(b):l.char.writeValue(b);
+    p.catch(function(){l.ok=false;render()});
   }
+  if(d>110)go();else l.t=setTimeout(go,120-d);
+}
+function find(id){return lights.filter(function(l){return l.id===id})[0]}
+function members(g){return g.members.map(find).filter(Boolean)}
 
-  function writeTo(l, bytes){
-    if(!l.ok) return Promise.resolve(false);
-    var p = l.char.writeValueWithoutResponse ? l.char.writeValueWithoutResponse(bytes) : l.char.writeValue(bytes);
-    return p.then(function(){return true}).catch(function(){ l.ok = false; render(); return false; });
+// 화면에 있는 같은 조명의 값들을 한꺼번에 맞춤
+function sync(l){
+  [].forEach.call(document.querySelectorAll('[data-s="'+l.id+'"]'),function(e){e.value=l.level});
+  [].forEach.call(document.querySelectorAll('[data-p="'+l.id+'"]'),function(e){e.textContent=l.level+'%'});
+  [].forEach.call(document.querySelectorAll('[data-pw="'+l.id+'"]'),function(e){e.textContent=l.on?'켜짐':'꺼짐';e.className='pw mini'+(l.on?' on':'')});
+  [].forEach.call(document.querySelectorAll('[data-tc="'+l.id+'"]'),function(e){e.setAttribute('aria-pressed',String(l.torch))});
+}
+function setOn(l,on){l.on=on;send(l);sync(l)}
+function setLevel(l,v){l.level=v;l.on=true;send(l);sync(l)}
+function setTorch(l,t){l.torch=t;if(l.on)send(l);sync(l)}
+
+function slider(l){return h('input',{type:'range',min:4,max:100,value:l.level,'data-s':l.id,'aria-label':'밝기',oninput:function(){setLevel(l,parseInt(this.value,10))}})}
+function torchSw(l){return h('button',{class:'sw',role:'switch','aria-pressed':String(l.torch),'data-tc':l.id,'aria-label':'손전등 모드',onclick:function(){setTorch(l,!l.torch)}})}
+
+// 조명 하나를 조절하는 줄
+function ctl(l){
+  return h('div',{class:'ctl'},[
+    h('div',{class:'r'},[
+      h('button',{class:'pw mini'+(l.on?' on':''),'data-pw':l.id,text:l.on?'켜짐':'꺼짐',onclick:function(){setOn(l,!l.on)}}),
+      slider(l),
+      h('span',{class:'pct','data-p':l.id,text:l.level+'%'})
+    ]),
+    h('div',{class:'tl'},[torchSw(l),h('span',{text:'손전등 모드'})])
+  ]);
+}
+
+function lightCard(l){
+  var ni=h('input',{class:'nm',value:l.name,'aria-label':'조명 이름',onchange:function(){
+    l.name=this.value.trim()||l.name;names[l.id]=l.name;save();render()}});
+  var top=h('div',{class:'top'},[h('div',{class:'dot'+(l.ok?'':' bad')}),ni]);
+  var btns=h('div',{class:'r',style:'margin-top:10px;justify-content:flex-end'},[
+    l.ok?null:h('button',{class:'mini',text:'다시 연결',onclick:function(){reconnect(l)}}),
+    h('button',{class:'mini',text:'깜빡이기',onclick:function(){blink(l)}}),
+    h('button',{class:'mini',text:'삭제',onclick:function(){
+      try{l.device.gatt.disconnect()}catch(e){}
+      lights=lights.filter(function(x){return x!==l});render()}})
+  ]);
+  return h('div',{class:'card'},[top,ctl(l),btns]);
+}
+
+function groupCard(g){
+  var ms=members(g);
+  var gp=h('span',{class:'pct',text:g.level+'%'});
+  var gs=h('input',{type:'range',min:4,max:100,value:g.level,'aria-label':'그룹 밝기',oninput:function(){
+    g.level=parseInt(this.value,10);gp.textContent=g.level+'%';ms.forEach(function(l){setLevel(l,g.level)})}});
+  var gt=h('button',{class:'sw',role:'switch','aria-pressed':String(!!g.torch),'aria-label':'그룹 손전등',onclick:function(){
+    g.torch=!g.torch;this.setAttribute('aria-pressed',String(g.torch));ms.forEach(function(l){setTorch(l,g.torch)})}});
+  var ni=h('input',{class:'nm',value:g.name,'aria-label':'그룹 이름',onchange:function(){
+    g.name=this.value.trim()||g.name;save();render()}});
+  var card=h('div',{class:'card'},[
+    h('div',{class:'top'},[ni,
+      h('button',{class:'mini',text:editing[g.id]?'완료':'멤버 선택',onclick:function(){editing[g.id]=!editing[g.id];render()}}),
+      h('button',{class:'mini',text:'삭제',onclick:function(){groups=groups.filter(function(x){return x!==g});save();render()}})]),
+    h('div',{class:'sub',text:ms.length+'개 조명'+(ms.length<g.members.length?' (연결 안 된 조명 포함)':'')})
+  ]);
+  if(editing[g.id]){
+    card.appendChild(h('div',{class:'chips'},lights.map(function(l){
+      var sel=g.members.indexOf(l.id)>-1;
+      return h('button',{class:'chip mini'+(sel?' sel':''),text:l.name,'aria-pressed':String(sel),onclick:function(){
+        var i=g.members.indexOf(l.id);if(i>-1)g.members.splice(i,1);else g.members.push(l.id);save();render()}});
+    })));
+    if(!lights.length)card.appendChild(h('div',{class:'sub',text:'먼저 조명을 추가해 주세요.'}));
   }
-
-  function sendAll(bytes){
-    if(!lights.length){ say('먼저 조명을 추가해 주세요.'); return Promise.resolve(); }
-    return Promise.all(lights.map(function(l){return writeTo(l, bytes)})).then(function(r){
-      var okc = r.filter(Boolean).length;
-      say(okc + '/' + lights.length + '개에 전송했어요.');
+  if(ms.length){
+    card.appendChild(h('div',{class:'ctl',style:'margin-top:10px'},[
+      h('div',{class:'r'},[
+        h('button',{class:'pw mini on',text:'전체 켜기',onclick:function(){ms.forEach(function(l){setOn(l,true)})}}),
+        h('button',{class:'mini',text:'전체 끄기',onclick:function(){ms.forEach(function(l){setOn(l,false)})}}),
+        gs,gp]),
+      h('div',{class:'tl'},[gt,h('span',{text:'그룹 전체 손전등 모드'})])
+    ]));
+    ms.forEach(function(l){
+      card.appendChild(h('div',{class:'mem'},[h('div',{class:'mn'},[h('div',{class:'dot'+(l.ok?'':' bad')}),h('span',{text:l.name})]),ctl(l)]));
     });
   }
+  return card;
+}
 
-  function render(){
-    emptyEl.hidden = lights.length > 0;
-    listEl.innerHTML = '';
-    lights.forEach(function(l, i){
-      var row = document.createElement('div'); row.className = 'light';
-      var dot = document.createElement('div'); dot.className = 'dot' + (l.ok ? '' : ' bad');
-      var nm = document.createElement('div'); nm.className = 'name';
-      nm.textContent = '조명 ' + (i+1);
-      var sp = document.createElement('span'); sp.textContent = l.ok ? '연결됨' : '연결이 끊겼어요';
-      nm.appendChild(sp);
-      var blink = document.createElement('button'); blink.className = 'mini'; blink.textContent = '깜빡이기';
-      blink.onclick = function(){ identify(l); };
-      var rm = document.createElement('button'); rm.className = 'mini'; rm.textContent = '삭제';
-      rm.onclick = function(){ try{ l.device.gatt.disconnect(); }catch(e){} lights.splice(i,1); render(); };
-      row.appendChild(dot); row.appendChild(nm); row.appendChild(blink); row.appendChild(rm);
-      listEl.appendChild(row);
+function render(){
+  var lc=$('lights'),gc=$('groups');lc.innerHTML='';gc.innerHTML='';
+  if(!lights.length)lc.appendChild(h('div',{class:'sub',style:'margin-bottom:10px',text:'연결된 조명이 없어요. 아래 버튼으로 하나씩 추가하세요.'}));
+  lights.forEach(function(l){lc.appendChild(lightCard(l))});
+  groups.forEach(function(g){gc.appendChild(groupCard(g))});
+}
+
+function link(dev){
+  return dev.gatt.connect().then(function(s){return s.getPrimaryServices()}).then(function(sv){
+    var i=0;
+    function n(){if(i>=sv.length)throw new Error('FFF4를 찾지 못했어요');return sv[i++].getCharacteristic(C).catch(n)}
+    return n();
+  });
+}
+function reconnect(l){
+  say('다시 연결하는 중이에요…');
+  link(l.device).then(function(ch){l.char=ch;l.ok=true;render();say('다시 연결했어요.');send(l)})
+  .catch(function(e){say('다시 연결 실패: '+(e&&e.message?e.message:String(e)))});
+}
+function blink(l){
+  var seq=[1,0,1,0,1],i=0;
+  (function step(){
+    if(i>=seq.length){send(l);return}
+    var b=frame(!!seq[i],100,false);i++;
+    if(l.ok)(l.char.writeValueWithoutResponse?l.char.writeValueWithoutResponse(b):l.char.writeValue(b)).catch(function(){});
+    setTimeout(step,350);
+  })();
+}
+
+function addLight(){
+  var stage='선택';
+  say('조명 목록을 불러오는 중이에요…');
+  var OPT=[S,'0000fff0-0000-1000-8000-00805f9b34fb','0000ffe0-0000-1000-8000-00805f9b34fb','0000ff00-0000-1000-8000-00805f9b34fb','02f00000-0000-0000-0000-00000000fe00'];
+  navigator.bluetooth.requestDevice({filters:[{namePrefix:'EASY-LIGHT'}],optionalServices:OPT})
+  .catch(function(e){
+    if(e&&e.name==='NotFoundError')throw e;
+    return navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:[S]});
+  })
+  .then(function(dev){
+    if(lights.some(function(l){return l.id===dev.id})){say('이미 추가한 조명이에요.');return}
+    say('연결하는 중이에요…');stage='연결';
+    return link(dev).then(function(ch){
+      var l={id:dev.id,device:dev,char:ch,ok:true,on:false,level:100,torch:false,name:names[dev.id]||'조명 '+(++seq)};
+      names[dev.id]=l.name;save();
+      dev.addEventListener('gattserverdisconnected',function(){l.ok=false;render()});
+      lights.push(l);render();
+      say(l.name+'을(를) 추가했어요. “깜빡이기”로 어떤 조명인지 확인하고 이름을 바꿔 보세요.');
     });
-  }
+  })
+  .catch(function(e){
+    if(stage==='선택'&&e&&e.name==='NotFoundError')say('선택을 취소했어요.');
+    else say('실패 ['+stage+'] '+(e&&e.name?e.name:typeof e)+': '+(e&&e.message?e.message:String(e)));
+  });
+}
 
-  // 어떤 조명인지 확인: 3번 깜빡
-  function identify(l){
-    var seq = [true,false,true,false,true], i = 0;
-    (function step(){
-      if(i >= seq.length){ writeTo(l, frame(true, level, torch)); return; }
-      writeTo(l, frame(seq[i], 100, false)); i++;
-      setTimeout(step, 350);
-    })();
-  }
-
-  function addLight(){
-    say('조명 목록을 불러오는 중이에요…');
-    var stage = '선택';
-    var OPT = [SERVICE, '0000fff0-0000-1000-8000-00805f9b34fb', '0000ffe0-0000-1000-8000-00805f9b34fb', '0000ff00-0000-1000-8000-00805f9b34fb', '02f00000-0000-0000-0000-00000000fe00'];
-    navigator.bluetooth.requestDevice({
-      filters:[{namePrefix:'EASY-LIGHT'}],
-      optionalServices:OPT
-    }).catch(function(e){
-      if(e && e.name === 'NotFoundError') throw e;
-      say('다른 방식으로 다시 시도하는 중이에요…');
-      return navigator.bluetooth.requestDevice({acceptAllDevices:true, optionalServices:[SERVICE]});
-    }).then(function(dev){
-      if(lights.some(function(l){return l.device.id === dev.id})){ say('이미 추가한 조명이에요.'); return; }
-      say('연결하는 중이에요…');
-      stage = '연결';
-      return dev.gatt.connect()
-        .then(function(s){ stage = '서비스 찾기'; return s.getPrimaryServices(); })
-        .then(function(svcs){
-          stage = '명령 칸(FFF4) 찾기 (서비스 ' + svcs.length + '개 발견)';
-          var i = 0;
-          function tryNext(){
-            if(i >= svcs.length) throw new Error('FFF4를 찾지 못했어요');
-            return svcs[i++].getCharacteristic(CHAR).catch(function(){ return tryNext(); });
-          }
-          return tryNext();
-        })
-        .then(function(ch){
-          var l = {device:dev, char:ch, ok:true};
-          dev.addEventListener('gattserverdisconnected', function(){ l.ok = false; render(); });
-          lights.push(l); render();
-          say('조명 ' + lights.length + '번을 추가했어요. “깜빡이기”로 어떤 조명인지 확인해 보세요.');
-        });
-    }).catch(function(e){
-      if(stage === '선택' && e && e.name === 'NotFoundError'){ say('선택을 취소했어요.'); }
-      else { say('실패 [' + stage + '] ' + (e && e.name ? e.name : typeof e) + ': ' + (e && e.message ? e.message : String(e))); }
-    });
-  }
-
-  // 슬라이더: 너무 자주 보내지 않도록 간격 제한
-  var last = 0, timer = null;
-  function slide(){
-    level = parseInt($('slider').value, 10);
-    $('pct').innerHTML = level + '<small>%</small>';
-    var now = Date.now();
-    clearTimeout(timer);
-    if(now - last > 120){ last = now; sendAll(frame(true, level, torch)); }
-    else { timer = setTimeout(function(){ last = Date.now(); sendAll(frame(true, level, torch)); }, 130); }
-  }
-
-  $('add').onclick = addLight;
-  $('slider').oninput = slide;
-  $('allOn').onclick = function(){ sendAll(frame(true, level, torch)); };
-  $('allOff').onclick = function(){ sendAll(frame(false, 0, false)); };
-  $('torch').onclick = function(){
-    torch = !torch; this.setAttribute('aria-pressed', String(torch));
-    say(torch ? '손전등 모드: 다음 “전체 켜기”부터 적용돼요.' : '일반 모드로 돌아왔어요.');
-  };
-  render();
+$('addL').onclick=addLight;
+$('addG').onclick=function(){
+  var g={id:'g'+Date.now(),name:'그룹 '+(groups.length+1),members:[],level:100,torch:false};
+  groups.push(g);editing[g.id]=true;save();render();say('“멤버 선택”에서 이 그룹에 넣을 조명을 골라 주세요.');
+};
+load();render();
 })();
 </script>
 </body>
