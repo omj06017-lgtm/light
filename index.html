@@ -141,9 +141,14 @@ input[type=range]{width:100%;height:44px;accent-color:var(--accent);margin:8px 0
   function addLight(){
     say('조명 목록을 불러오는 중이에요…');
     var stage = '선택';
+    var OPT = [SERVICE, 0xFFF0, 0xFFE0, 0xFF00, '02f00000-0000-0000-0000-00000000fe00'];
     navigator.bluetooth.requestDevice({
       filters:[{namePrefix:'EASY-LIGHT'}],
-      optionalServices:[SERVICE, 0xFFF0, 0xFFE0, 0xFF00, '02f00000-0000-0000-0000-00000000fe00']
+      optionalServices:OPT
+    }).catch(function(e){
+      if(e && e.name === 'NotFoundError') throw e;
+      say('다른 방식으로 다시 시도하는 중이에요…');
+      return navigator.bluetooth.requestDevice({acceptAllDevices:true, optionalServices:[SERVICE]});
     }).then(function(dev){
       if(lights.some(function(l){return l.device.id === dev.id})){ say('이미 추가한 조명이에요.'); return; }
       say('연결하는 중이에요…');
@@ -167,7 +172,7 @@ input[type=range]{width:100%;height:44px;accent-color:var(--accent);margin:8px 0
         });
     }).catch(function(e){
       if(stage === '선택' && e && e.name === 'NotFoundError'){ say('선택을 취소했어요.'); }
-      else { say('실패 [' + stage + '] ' + (e && e.name ? e.name : '') + ': ' + (e && e.message ? e.message : e)); }
+      else { say('실패 [' + stage + '] ' + (e && e.name ? e.name : typeof e) + ': ' + (e && e.message ? e.message : String(e))); }
     });
   }
 
